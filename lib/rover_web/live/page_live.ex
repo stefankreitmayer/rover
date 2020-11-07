@@ -3,37 +3,41 @@ defmodule RoverWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    {:ok, assign(socket, movement: nil)}
   end
 
   @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
+  def handle_event("forward", _, socket) do
+    {:noreply, socket |> move(1, 1)}
   end
 
   @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
-    end
+  def handle_event("backward", _, socket) do
+    {:noreply, socket |> move(-1, -1)}
   end
 
-  defp search(query) do
-    if not RoverWeb.Endpoint.config(:code_reloader) do
-      raise "action disabled when not in development"
-    end
+  @impl true
+  def handle_event("left", _, socket) do
+    {:noreply, socket |> move(-1, 1)}
+  end
 
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
+  @impl true
+  def handle_event("right", _, socket) do
+    {:noreply, socket |> move(1, -1)}
+  end
+
+  @impl true
+  def handle_info(:stop_motors, socket) do
+    {:noreply, socket |> assign(movement: nil)}
+  end
+
+  def move(socket, left, right) do
+    if socket.assigns.movement do
+      socket
+    else
+      Process.send_after(self(), :stop_motors, 1000)
+      socket
+      |> assign(:movement, "#{left}  #{right}")
+    end
   end
 end
