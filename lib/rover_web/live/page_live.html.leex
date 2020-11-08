@@ -1,13 +1,19 @@
-<div class="Steering">
-<button class="ButtonFullWidth" phx-click="forward">Forward</button>
-<div class="LeftRight">
-  <button phx-click="left">Left</button>
-  <button phx-click="right">Right</button>
-</div>
-<button class="ButtonFullWidth" phx-click="backward">Backward</button>
-</div>
-
-
-<div class="Movement">
-  <%= assigns[:movement] %>
+<div class="UiPanel">
+  <div class="PhotoContainer">
+    <%= if !assigns[:photo] do %>
+      <div class="PhotoPlaceholder">
+        no photo
+      </div>
+    <% end %>
+  </div>
+  <div class="SteeringContainer<%= if assigns[:movement], do: " InMotion", else: "" %>">
+    <div class="SteeringButtonArray">
+      <button class="ButtonFullWidth" phx-click="forward">Forward</button>
+      <div class="LeftRight">
+        <button phx-click="left">Left</button>
+        <button phx-click="right">Right</button>
+      </div>
+      <button class="ButtonFullWidth" phx-click="backward">Backward</button>
+    </div>
+  </div>
 </div>
