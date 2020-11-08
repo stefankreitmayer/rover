@@ -20,8 +20,8 @@ defmodule RoverWeb.Router do
     live "/", PageLive, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", RoverWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", RoverWeb do
+    pipe_through :api
+    post "/photo", PhotoUploadController, :upload
+  end
 end

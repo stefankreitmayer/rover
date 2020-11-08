@@ -1,6 +1,8 @@
 <div class="UiPanel">
   <div class="PhotoContainer">
-    <%= if !assigns[:photo] do %>
+    <%= if assigns[:photo] do %>
+      <img class="PhotoContent" src="<%= assigns.photo %>">
+    <% else %>
       <div class="PhotoPlaceholder">
         no photo
       </div>
