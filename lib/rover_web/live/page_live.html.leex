@@ -1,11 +1,12 @@
 <div class="UiPanel">
   <div class="PhotoContainer">
-    <%= if assigns[:photo] do %>
-      <img class="PhotoContent" src="<%= assigns.photo %>">
-    <% else %>
-      <div class="PhotoPlaceholder">
-        no photo
-      </div>
+    <%= case assigns.photo do %>
+      <% {:ok, data} -> %>
+        <img class="PhotoContent" src="<%= data %>">
+      <% {:error, message} -> %>
+        <div class="PhotoPlaceholder">
+          <%= message %>
+        </div>
     <% end %>
   </div>
   <div class="SteeringContainer<%= if assigns[:movement], do: " InMotion", else: "" %>">

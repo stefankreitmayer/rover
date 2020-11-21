@@ -3,8 +3,8 @@ defmodule RoverWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    Phoenix.PubSub.subscribe(Rover.PubSub, "photo_upload")
-    {:ok, socket}
+    Phoenix.PubSub.subscribe(Rover.PubSub, "photo_upload") # deprecated
+    {:ok, socket |> fetch_photo()}
   end
 
   @impl true
@@ -45,5 +45,23 @@ defmodule RoverWeb.PageLive do
       socket
       |> assign(:movement, "#{left}  #{right}")
     end
+  end
+
+  defp fetch_photo(socket) do
+    socket
+    |> assign(:photo, fetch_photo_html())
+  end
+
+  defp fetch_photo_html do
+    url = "morty.local:5000/api/v1/snap"
+    try do
+      response = HTTPoison.get!(url)
+      data = Jason.decode!(response.body)
+      image_data = data["image"]
+      {:ok, "data:image/jpeg;base64,#{image_data}"}
+    rescue
+      e -> {:error, "Error: #{e.reason}"}
+    end
+
   end
 end

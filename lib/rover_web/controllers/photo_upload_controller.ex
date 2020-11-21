@@ -1,6 +1,8 @@
 defmodule RoverWeb.PhotoUploadController do
   use RoverWeb, :controller
 
+  # Not sure if this endpoint is the way to go.
+  # Probably better to call the flask server from phoenix instead
   def upload(conn, %{"image" => image}) do
     Phoenix.PubSub.broadcast(Rover.PubSub, "photo_upload", %{photo: image})
 
