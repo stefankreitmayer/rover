@@ -9,7 +9,10 @@
         </div>
     <% end %>
   </div>
-  <div class="SteeringContainer<%= if assigns[:movement], do: " InMotion", else: "" %>">
+  <div class="MotorFeedbackMessage">
+    <%= assigns[:motor_feedback] %>
+  </div>
+  <div class="SteeringContainer<%= if assigns[:motor_feedback], do: " MotorFeedback", else: "" %>">
     <div class="SteeringButtonArray">
       <button class="ButtonFullWidth" phx-click="forward">Forward</button>
       <div class="LeftRight">
